@@ -12,5 +12,18 @@ if [ -z $bundlename ]; then
   bundlename="실행기"
 fi
 
-zip -r "${bundlename}.zip" .nossi testcase Solution.java run_java run_java.bat
+if [ ! -d "dest" ]; then
+  echo "[info] 'dest' 디렉토리가 존재하지 않습니다. 새로 생성합니다."
+  mkdir "dest"
+fi
+
+zippath="dest/${bundlename}.zip"
+zip -q -r $zippath .nossi testcase Solution.java run_java run_java.bat
+
+if [ $? -eq 0 ]; then
+  echo "'${zippath}'가 성공적으로 생성되었습니다."
+else
+  echo "아카이빙 도중 문제가 발생했습니다."
+fi
+
 

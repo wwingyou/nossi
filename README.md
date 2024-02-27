@@ -3,8 +3,8 @@
 ## 빌드
 `build` 스트립트의 실행권한 수정 후 실행하면 `nossi/` 디렉토리의 파일들이 빌드되어 `.nossi` 디렉토리에 클래스파일들이 생성된다.
 ```bash
-chmod 755 build
-./build
+$ chmod 755 build
+$ ./build
 ```
 
 ## 아카이빙

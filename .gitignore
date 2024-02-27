@@ -1,2 +1,5 @@
 .nossi
 Solution.class
+*.zip
+
+**/.DS_Store

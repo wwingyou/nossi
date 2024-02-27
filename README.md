@@ -20,12 +20,12 @@ chmod 755 build
 ├── run_java                # MacOS, Linux 실행기
 ├── run_java.bat            # Windows 실행기
 └── testcase                # 테스트케이스 디렉토리
-├── 1
-│   ├── input.txt
-│   └── output.txt
-└── 2
-    ├── input.txt
-    └── output.txt
+    ├── 1
+    │   ├── input.txt
+    │   └── output.txt
+    └── 2
+        ├── input.txt
+        └── output.txt
 ```
 
 ## 사용법

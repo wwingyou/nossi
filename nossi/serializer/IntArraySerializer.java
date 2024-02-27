@@ -19,12 +19,14 @@ public class IntArraySerializer implements Serializer {
 
     @Override
     public String serialize(Object obj) {
-        StringBuilder sb = new StringBuilder('[');
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
         int[] arr = (int[])obj;
         for (int e : arr) {
             sb.append(e);
-            sb.append(',');
+            sb.append(", ");
         }
+        sb.delete(sb.length()-2, sb.length());
         sb.append(']');
         return sb.toString();
     }

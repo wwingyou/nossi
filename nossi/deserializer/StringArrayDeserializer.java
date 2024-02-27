@@ -42,7 +42,7 @@ public class StringArrayDeserializer implements Deserializer {
             }
         }
         return list.stream()
-            .toArray();
+            .toArray(String[]::new);
     }
 
 }

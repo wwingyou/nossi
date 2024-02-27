@@ -1,6 +1,7 @@
 package nossi;
 
 import static nossi.Util.normalize;
+import static nossi.Util.resolveWrapperClass;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -51,7 +52,7 @@ public class Main {
             }
         });
         Class<?>[] typeArray = argumentList.stream()
-            .map(arg -> arg.getClass())
+            .map(arg -> resolveWrapperClass(arg.getClass()))
             .toArray(n -> new Class<?>[n]);
         Object[] argArray = argumentList.toArray();
         // 현재 작업 디렉토리 가져오기

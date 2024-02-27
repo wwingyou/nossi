@@ -1,5 +1,7 @@
 package nossi.serializer;
 
+import static nossi.Util.resolveWrapperClass;
+
 public class IntSerializer implements Serializer {
 
     @Override
@@ -9,12 +11,12 @@ public class IntSerializer implements Serializer {
 
     @Override
     public Class<?> getType() {
-        return Integer.class;
+        return int.class;
     }
 
     @Override
     public boolean match(Object obj) {
-        return obj.getClass().equals(getType());
+        return resolveWrapperClass(obj.getClass()).equals(getType());
     }
 
     @Override

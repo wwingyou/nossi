@@ -1,5 +1,5 @@
 public class Solution {
-    public int solve(Integer a, Integer b) {
+    public int solve(int a, int b) {
         return a + b;
     }
 }

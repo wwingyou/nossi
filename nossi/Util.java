@@ -1,6 +1,12 @@
 package nossi;
 
 public class Util {
+    public static Class<?> resolveWrapperClass(Class<?> clazz) {
+        if (clazz.equals(Integer.class)) return int.class;
+        if (clazz.equals(Double.class)) return double.class;
+        return clazz;
+    }
+
     public static String normalize(String valueString) {
         StringBuilder sb = new StringBuilder();
         boolean escape = false;

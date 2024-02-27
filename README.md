@@ -24,9 +24,8 @@ chmod 755 build
 │   ├── input.txt
 │   └── output.txt
 └── 2
-├── input.txt
-└── output.txt
-
+    ├── input.txt
+    └── output.txt
 ```
 
 ## 사용법

@@ -1,7 +1,5 @@
-import java.util.*;
-
 public class Solution {
-    public int add(int a, int b) {
+    public int solve(Integer a, Integer b) {
         return a + b;
     }
 }

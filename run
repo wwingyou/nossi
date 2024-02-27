@@ -1,0 +1,5 @@
+#!/bin/bash
+
+javac -d dest nossi/**/*.java
+javac -d dest nossi/*.java
+java -cp dest nossi.Main

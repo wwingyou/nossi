@@ -1,12 +1,12 @@
 #! /bin/bash
 
-javac *.java  # 현재 디렉토리의 자바 파일들을 컴파일한다.
+javac Solution.java
 
 list=$(ls testcase)
 for i in $list; do
   echo "-- test ${i} --"
   echo "출력"
-  java Main < "testcase/${i}/input.txt"
+  java -cp .nossi nossi.Main < "testcase/${i}/input.txt"
   echo "정답"
   cat "testcase/${i}/output.txt"
 done

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+javac -d .nossi nossi/**/*.java
+javac -d .nossi nossi/*.java

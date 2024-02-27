@@ -3,14 +3,3 @@
 # compile class files
 javac -d .nossi nossi/**/*.java
 javac -d .nossi nossi/*.java
-
-# add x bits to exe files
-chmod 755 run_java
-chmod 755 run_java.bat
-
-bundlename=$1
-if [ -z $bundlename ]; then
-  bundlename="실행기"
-fi
-
-zip -r "${bundlename}.zip" .nossi testcase Solution.java run_java run_java.bat

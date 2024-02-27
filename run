@@ -1,5 +1,3 @@
 #!/bin/bash
 
-javac -d .nossi nossi/**/*.java
-javac -d .nossi nossi/*.java
-java -cp .nossi nossi.Main
+./build

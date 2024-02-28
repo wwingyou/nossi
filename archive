@@ -18,7 +18,7 @@ if [ ! -d "dest" ]; then
 fi
 
 zippath="dest/${bundlename}.zip"
-zip -q -r $zippath .nossi testcase Solution.java run_java run_java.bat
+zip -q -r $zippath .nossi testcase.txt Solution.java run_java run_java.bat
 
 if [ $? -eq 0 ]; then
   echo "'${zippath}'가 성공적으로 생성되었습니다."

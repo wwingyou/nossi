@@ -11,8 +11,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -40,21 +43,6 @@ public class Main {
         converter.applySerializer(new StringSerializer());
         converter.applySerializer(new IntArraySerializer());
 
-        BufferedReader sr = new BufferedReader(new InputStreamReader(System.in));
-        final Pattern VAR_MATCH = Pattern.compile("^[a-zA-Z_-]+=(.*)$");
-
-        final List<Object> argumentList = new ArrayList<>();
-        sr.lines().forEach(line -> {
-            Matcher matcher = VAR_MATCH.matcher(normalize(line));
-            if (matcher.find()) {
-                Object arg = converter.deserialize(matcher.group(1));
-                argumentList.add(arg);
-            }
-        });
-        Class<?>[] typeArray = argumentList.stream()
-            .map(arg -> resolveWrapperClass(arg.getClass()))
-            .toArray(n -> new Class<?>[n]);
-        Object[] argArray = argumentList.toArray();
         // 현재 작업 디렉토리 가져오기
         String currentDir = System.getProperty("user.dir");
         // URLClassLoader를 사용하여 클래스 로드
@@ -63,8 +51,45 @@ public class Main {
         Class<?> solutionClass = classLoader.loadClass("Solution");
         classLoader.close();
 
-        Method solveMethod = solutionClass.getMethod("solve", typeArray);
-        Object result = solveMethod.invoke(solutionClass.getDeclaredConstructor().newInstance(), argArray);
-        System.out.println(converter.serialize(result));
+        Timer timer = new Timer();
+        Thread runner = new Thread(() -> {
+            BufferedReader sr = new BufferedReader(new InputStreamReader(System.in));
+            final Pattern VAR_MATCH = Pattern.compile("^[a-zA-Z_-]+=(.*)$");
+
+            final List<Object> argumentList = new ArrayList<>();
+            sr.lines().forEach(line -> {
+                Matcher matcher = VAR_MATCH.matcher(normalize(line));
+                if (matcher.find()) {
+                    Object arg = converter.deserialize(matcher.group(1));
+                    argumentList.add(arg);
+                }
+            });
+            Class<?>[] typeArray = argumentList.stream()
+                .map(arg -> resolveWrapperClass(arg.getClass()))
+                .toArray(n -> new Class<?>[n]);
+            Object[] argArray = argumentList.toArray();
+
+            try {
+                Method solveMethod = solutionClass.getMethod("solve", typeArray);
+                Object result = solveMethod.invoke(solutionClass.getDeclaredConstructor().newInstance(), argArray);
+                System.out.println(converter.serialize(result));
+            } catch (IllegalAccessException | InvocationTargetException | InstantiationException
+                    | IllegalArgumentException | NoSuchMethodException | SecurityException e) {
+                e.printStackTrace();
+            } finally {
+                timer.cancel();
+                timer.purge();
+            }
+        });
+        
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runner.interrupt();
+                timer.cancel();
+                System.out.println("시간 초과");
+            }
+        }, 10000);
+        runner.start();
     }
 }

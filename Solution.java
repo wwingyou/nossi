@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 public class Solution {
     int LIMIT = 100_000;
-    public int solve(int n, int[][] escalator) {
+    public int solve(int n, int[][] escalator) throws InterruptedException {
         //✅ dp 테이블의 첫 행을 채운다. 사람이 서있는 위치라면 매우 큰 값을 추가한다.
         escalator[0][0] = escalator[0][0] == 1 ? LIMIT : 1;
         escalator[0][1] = escalator[0][1] == 1 ? LIMIT : 0;
@@ -10,6 +10,7 @@ public class Solution {
         //✅ 다음 행부터 dp 테이블을 채운다.
         for (int r = 1; r < escalator.length; r++) {
             for (int c = 0; c < 3; c++) {
+                //Thread.sleep(1000);
                 if (escalator[r][c] == 1) escalator[r][c] = LIMIT;
                 else {
                     //✅ 이전 행 중에서 가장 빠르게 현재 위치로 도착할 수 있는 경우를 찾아 기록한다.

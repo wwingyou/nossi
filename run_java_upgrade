@@ -14,6 +14,9 @@ test_number=0
 regex_start="^testcase ([0-9]+)"
 regex_result="^result=([0-9]+)"
 IFS=$'\n'
+
+correct=0
+wrong=0
 while read line; do
   if [[ $line =~ $regex_result ]]; then
     test_start=false
@@ -22,8 +25,10 @@ while read line; do
     echo "-- test ${test_number} --"
     echo "출력"
     if [ $output == $expected ]; then
+      ((correct++))
       echo -e "${GREEN}${output}${NC}"
     else
+      ((wrong++))
       echo -e "${RED}${output}${NC}"
     fi
     echo "정답"
@@ -38,19 +43,6 @@ while read line; do
     test_number=${BASH_REMATCH[1]}
   fi
 done < $file_path
-# for i in $testcase; do
-  # echo $i
-  # output=$(java -cp .nossi nossi.Main < "testcase/${i}/input.txt")
-  # expected=$(cat "testcase/${i}/output.txt")
-  # echo "-- test ${i} --"
-  # echo "출력"
-  # if [ $output == $expected ]; then
-  #   echo -e "${GREEN}${output}${NC}"
-  # else
-  #   echo -e "${RED}${output}${NC}"
-  # fi
-  # echo "정답"
-  # echo $expected
-# done
 
-
+echo
+echo -e "총 $((correct + wrong))문제, ${GREEN}정답 ${correct}${NC}, ${RED}오답 ${wrong}${NC}"

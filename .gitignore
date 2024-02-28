@@ -1,6 +1,8 @@
-.nossi
 dest
+tmp
+publish
 *.class
 *.zip
+src/resource/problems
 
 **/.DS_Store

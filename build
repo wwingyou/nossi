@@ -1,13 +1,5 @@
 #!/bin/bash
 
-if [ ! -d .nossi ]; then
-  mkdir .nossi
-fi
-
-# copy jansi 
-cp jansi-2.4.0.jar .nossi/jansi-2.4.0.jar
-
 # compile class files
-javac -d .nossi -cp jansi-2.4.0.jar:.nossi:. nossi/**/*.java
-javac -d .nossi -cp jansi-2.4.0.jar:.nossi:. nossi/*.java
+javac -d src/build/java -cp .:lib/jansi-2.4.0.jar $(find src/java -type f -name *.java)
 

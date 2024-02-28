@@ -1,7 +1,0 @@
-#! /bin/bash
-
-cd $(dirname ${BASH_SOURCE[0]})
-
-javac Solution.java
-
-java -cp .:.nossi:.nossi/jansi-2.4.0.jar nossi.Main < testcase.txt

@@ -1,3 +1,30 @@
 #!/bin/bash
 
 ./build
+
+if [ -z $1 ]; then
+  echo "[error] 실행시킬 파일의 디렉토리가 필요합니다."
+  echo "Usage: ./run 덧셈뺄셈"
+  echo
+  exit 1
+fi
+
+rootpath="src/resource/problems/$1"
+solutionpath="${rootpath}/Solution.java"
+testcasepath="${rootpath}/testcase.txt"
+if [ ! -f $solutionpath ]; then
+  echo "[error] '${solutionpath}'를 찾을 수 없습니다."
+  echo
+  exit 2
+fi
+
+if [ ! -f $testcasepath ]; then
+  echo "[error] '${testcasepath}'를 찾을 수 없습니다."
+  echo
+  exit 3
+fi
+
+javac -d tmp $solutionpath
+java -cp src/build/java:lib/jansi-2.4.0.jar:tmp nossi.Main < $testcasepath
+
+

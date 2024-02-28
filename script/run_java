@@ -1,0 +1,7 @@
+#! /bin/bash
+
+cd $(dirname $0)
+
+javac Solution.java
+
+java -cp .:../../java:../../lib/jansi-2.4.0.jar nossi.Main < testcase.txt

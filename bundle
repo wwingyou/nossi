@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# compile class files
+./build
+
+# add x bits to exe files
+chmod 755 script/run_java
+chmod 755 script/run_java.bat
+
+if [ ! -d "dest" ]; then
+  echo "[info] 'dest' 디렉토리가 존재하지 않습니다. 새로 생성합니다."
+  mkdir "dest"
+fi
+
+cp -r src/build/java dest
+cp -r lib dest
+cp -r src/resource/problems dest
+
+for name in $(ls dest/problems); do
+  path="dest/problems/$name"
+  cp script/run_java $path
+  cp script/run_java.bat $path
+done
+
+echo "성공적으로 번들링하였습니다."

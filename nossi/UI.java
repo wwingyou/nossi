@@ -1,6 +1,6 @@
 package nossi;
 
-import org.fusesource.jansi.AnsiConsole;
+import org.fusesource.jansi.*;
 
 public class UI {
     public final static String RED = "\033[31m";
@@ -27,7 +27,7 @@ public class UI {
     }
 
     public void correct(String line) {
-        AnsiConsole.out().println(UI.GREEN + line + UI.NC);
+        AnsiConsole.out().println(Ansi.ansi().fg(Ansi.Color.GREEN).a(line).reset());
     }
 
     public void compose(String saturatedLine) {

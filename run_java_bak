@@ -1,0 +1,23 @@
+#! /bin/bash
+
+RED='\033[31m'
+GREEN='\033[32m'
+NC='\033[0m'
+
+javac Solution.java
+
+list=$(ls testcase)
+for i in $list; do
+  output=$(java -cp .nossi nossi.Main < "testcase/${i}/input.txt")
+  expected=$(cat "testcase/${i}/output.txt")
+  echo "-- test ${i} --"
+  echo "출력"
+  if [ $output == $expected ]; then
+    echo -e "${GREEN}${output}${NC}"
+  else
+    echo -e "${RED}${output}${NC}"
+  fi
+  echo "정답"
+  echo $expected
+done
+

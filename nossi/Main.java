@@ -1,21 +1,21 @@
 package nossi;
 
 import static nossi.Util.normalize;
-import static nossi.Util.resolveWrapperClass;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -51,45 +51,65 @@ public class Main {
         Class<?> solutionClass = classLoader.loadClass("Solution");
         classLoader.close();
 
-        Timer timer = new Timer();
-        Thread runner = new Thread(() -> {
-            BufferedReader sr = new BufferedReader(new InputStreamReader(System.in));
-            final Pattern VAR_MATCH = Pattern.compile("^[a-zA-Z_-]+=(.*)$");
+        BufferedReader sr = new BufferedReader(new InputStreamReader(System.in));
+        UI ui = UI.getInstance();
+        final Pattern TESTCASE_MATCH = Pattern.compile("^testcase([0-9]+)");
+        final Pattern VAR_MATCH = Pattern.compile("^[a-zA-Z_-]+=(.*)$");
+        final Pattern RESULT_MATCH = Pattern.compile("^result=([0-9]+)");
 
-            final List<Object> argumentList = new ArrayList<>();
-            sr.lines().forEach(line -> {
-                Matcher matcher = VAR_MATCH.matcher(normalize(line));
-                if (matcher.find()) {
-                    Object arg = converter.deserialize(matcher.group(1));
-                    argumentList.add(arg);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        List<Object> argumentList = new ArrayList<>();
+        String testIndex = "0";
+        Matcher matcher;
+
+        int correct = 0;
+        int wrong = 0;
+
+        for (String line : sr.lines().toArray(String[]::new)) {
+            String normalized = normalize(line);
+            matcher = TESTCASE_MATCH.matcher(normalized);
+            if (matcher.find()) {
+                testIndex = matcher.group(1);
+                continue;
+            }
+            matcher = RESULT_MATCH.matcher(normalized);
+            if (matcher.find()) {
+                ui.printLine("-- testcase " + testIndex + " --");
+                String result = matcher.group(1);
+                Runner runner = new Runner("solve", solutionClass, argumentList);
+                Future<Object> futureResult = executor.submit(runner::call);
+                ui.printLine("출력");
+                try {
+                    String output = converter.serialize(futureResult.get(10, TimeUnit.SECONDS));
+                    if (output.equals(result)) {
+                        correct++;
+                        ui.correct(output);
+                    } else {
+                        wrong++;
+                        ui.wrong(output);
+                    }
+                } catch (TimeoutException e) {
+                    ui.wrong("시간 초과");
+                    wrong++;
+                } catch (Exception e) {
+                    ui.wrong("런타임 에러");
+                    wrong++;
                 }
-            });
-            Class<?>[] typeArray = argumentList.stream()
-                .map(arg -> resolveWrapperClass(arg.getClass()))
-                .toArray(n -> new Class<?>[n]);
-            Object[] argArray = argumentList.toArray();
+                ui.printLine("정답");
+                ui.printLine(result);
 
-            try {
-                Method solveMethod = solutionClass.getMethod("solve", typeArray);
-                Object result = solveMethod.invoke(solutionClass.getDeclaredConstructor().newInstance(), argArray);
-                System.out.println(converter.serialize(result));
-            } catch (IllegalAccessException | InvocationTargetException | InstantiationException
-                    | IllegalArgumentException | NoSuchMethodException | SecurityException e) {
-                e.printStackTrace();
-            } finally {
-                timer.cancel();
-                timer.purge();
+                argumentList.clear();
+                continue;
             }
-        });
-        
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runner.interrupt();
-                timer.cancel();
-                System.out.println("시간 초과");
+            matcher = VAR_MATCH.matcher(normalized);
+            if (matcher.find()) {
+                Object arg = converter.deserialize(matcher.group(1));
+                argumentList.add(arg);
             }
-        }, 10000);
-        runner.start();
+        }
+
+        executor.shutdown();
+        ui.printLine("총 " + (correct + wrong) + "문제, 정답 " + UI.GREEN + correct + UI.NC + ", 오답 " + UI.RED + wrong + UI.NC);
+        System.exit(0);
     }
 }

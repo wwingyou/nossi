@@ -1,29 +1,49 @@
-import java.util.Arrays;
+import java.util.*;
 
 public class Solution {
-    int LIMIT = 100_000;
-    public int solve(int n, int[][] escalator) throws InterruptedException {
-        //✅ dp 테이블의 첫 행을 채운다. 사람이 서있는 위치라면 매우 큰 값을 추가한다.
-        escalator[0][0] = escalator[0][0] == 1 ? LIMIT : 1;
-        escalator[0][1] = escalator[0][1] == 1 ? LIMIT : 0;
-        escalator[0][2] = escalator[0][2] == 1 ? LIMIT : 1;
-        //✅ 다음 행부터 dp 테이블을 채운다.
-        for (int r = 1; r < escalator.length; r++) {
-            for (int c = 0; c < 3; c++) {
-                //Thread.sleep(1000);
-                if (escalator[r][c] == 1) escalator[r][c] = LIMIT;
-                else {
-                    //✅ 이전 행 중에서 가장 빠르게 현재 위치로 도착할 수 있는 경우를 찾아 기록한다.
-                    int min = LIMIT;
-                    for (int k = 0; k < 3; k++) {
-                        min = Math.min(min, escalator[r-1][k] + Math.abs(k - c));
-                    }
-                    escalator[r][c] = min;
+    public int solve(int n, int[] cars, int[][] links) {
+        int[] carsSum = new int[n+1];
+        for (int i = 0; i < n; i++) {
+            carsSum[i+1] = cars[i];
+        }
+        //✅ 주어진 간선을 통해 그래프를 생성한다.
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int[] link : links) {
+            graph.putIfAbsent(link[0], new ArrayList<>());
+            graph.putIfAbsent(link[1], new ArrayList<>());
+            graph.get(link[0]).add(link[1]);
+            graph.get(link[1]).add(link[0]);
+        }
+
+        //✅ 스택에 루트 노드를 넣고 dfs를 진행한다.
+        boolean[] visited = new boolean[n+1];
+        visited[1] = true;
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.push(1);
+        while (!stack.isEmpty()) {
+            //✅ 스택에 추가하려는 노드가 부모 노드인 경우 제거한다.
+            if (!graph.get(stack.peek()).isEmpty() && visited[graph.get(stack.peek()).get(0)]) {
+                graph.get(stack.peek()).remove(0);
+            }
+            //✅ 자식 노드가 있는 경우 스택에 다음 노드를 추가한다.
+            if (!graph.get(stack.peek()).isEmpty()) {
+                int temp = graph.get(stack.peek()).remove(0);
+                visited[temp] = true;
+                stack.push(temp);
+            //✅ 자식 노드가 없는 경우 해당 노드의 노드값을 부모 노드에 추가한다.
+            } else {
+                int temp = stack.pop();
+                if (!stack.isEmpty()) {
+                    carsSum[stack.peek()] += carsSum[temp];
                 }
             }
         }
-        //✅ 마지막 행 중 가장 작은 값을 반환한다.
-        return Arrays.stream(escalator[escalator.length-1])
-                    .min().getAsInt();
+        //✅ 저장된 노드 값들을 통해 정답을 찾는다.
+        double target = carsSum[1] / 2.0;
+        double minDiff = target;
+        for (int carsPerNode : carsSum) {
+            minDiff = Math.min(minDiff, Math.abs(target - carsPerNode));
+        }
+        return (int)(minDiff * 2);
     }
 }

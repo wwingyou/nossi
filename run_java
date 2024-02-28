@@ -2,4 +2,4 @@
 
 javac Solution.java
 
-java -cp .nossi:.nossi/jansi-2.4.0.jar nossi.Main < testcase.txt
+java -cp .:.nossi:.nossi/jansi-2.4.0.jar nossi.Main < testcase.txt

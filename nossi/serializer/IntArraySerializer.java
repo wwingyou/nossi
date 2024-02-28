@@ -24,9 +24,9 @@ public class IntArraySerializer implements Serializer {
         int[] arr = (int[])obj;
         for (int e : arr) {
             sb.append(e);
-            sb.append(", ");
+            sb.append(",");
         }
-        sb.delete(sb.length()-2, sb.length());
+        sb.delete(sb.length()-1, sb.length());
         sb.append(']');
         return sb.toString();
     }

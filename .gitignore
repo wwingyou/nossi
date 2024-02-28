@@ -1,6 +1,6 @@
 #.nossi
 dest
-Solution.class
+*.class
 *.zip
 
 **/.DS_Store

@@ -55,7 +55,7 @@ public class Main {
         UI ui = UI.getInstance();
         final Pattern TESTCASE_MATCH = Pattern.compile("^testcase([0-9]+)");
         final Pattern VAR_MATCH = Pattern.compile("^[a-zA-Z_-]+=(.*)$");
-        final Pattern RESULT_MATCH = Pattern.compile("^result=([0-9]+)");
+        final Pattern RESULT_MATCH = Pattern.compile("^result=(.+)");
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         List<Object> argumentList = new ArrayList<>();
@@ -89,14 +89,17 @@ public class Main {
                         ui.wrong(output);
                     }
                 } catch (TimeoutException e) {
-                    ui.wrong("시간 초과");
+                    ui.wrong("Time Limit Exceed");
                     wrong++;
                 } catch (Exception e) {
-                    ui.wrong("런타임 에러");
+                    ui.wrong("Runtime Error");
+                    ui.wrong(e.getMessage());
+                    e.printStackTrace();
                     wrong++;
                 }
                 ui.printLine("정답");
-                ui.printLine(result);
+                ui.printLine(normalize(result));
+                ui.printLine("");
 
                 argumentList.clear();
                 continue;

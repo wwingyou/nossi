@@ -14,25 +14,13 @@ if errorlevel 1 (
 )
 
 rem java 파일 컴파일
-javac *.java
+javac Solution.java
 
 if errorlevel 1 (
 	echo 오류: 컴파일 에러
 	goto :EOF
 )
 
-rem index가 for문 안에서 증가되도록 하기 위한 delayed expansion 세팅
-setlocal ENABLEDELAYEDEXPANSION
-set /a index=0
-for /d %%D in ("%cd%\testcase\*") do (
-	set /a index+=1
-	echo -- test !index! --
-	echo 출력
-	java Main < "%%D\input.txt"
-	echo 정답
-	type "%%D\output.txt"
-)
-endlocal
-
+java -cp .nossi\jansi-2.4.0.jar;.nossi nossi.Main < testcase.txt
 
 pause

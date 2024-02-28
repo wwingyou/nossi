@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ ! -d "publish" ]; then
+  echo "[info] publish 디렉토리가 존재하지 않습니다. 새로 생성합니다."
+  mkdir publish
+fi
+
+
 bundlename=$1
 if [ -z $bundlename ]; then
   bundlename="노씨데브_코드실행기"

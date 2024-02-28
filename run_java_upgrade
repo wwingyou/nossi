@@ -1,0 +1,56 @@
+#! /bin/bash
+
+RED='\033[31m'
+GREEN='\033[32m'
+NC='\033[0m'
+NEWLINE=$'\n'
+
+javac Solution.java
+
+file_path="testcase.txt"
+test_start=false
+input=""
+test_number=0
+regex_start="^testcase ([0-9]+)"
+regex_result="^result=([0-9]+)"
+IFS=$'\n'
+while read line; do
+  if [[ $line =~ $regex_result ]]; then
+    test_start=false
+    expected=${BASH_REMATCH[1]}
+    output=$(printf $input | java -cp .nossi nossi.Main)
+    echo "-- test ${test_number} --"
+    echo "출력"
+    if [ $output == $expected ]; then
+      echo -e "${GREEN}${output}${NC}"
+    else
+      echo -e "${RED}${output}${NC}"
+    fi
+    echo "정답"
+    echo $expected
+    input=""
+  fi
+  if $test_start; then
+    input="${input}${line}\n"
+  fi
+  if [[ $line =~ $regex_start ]]; then
+    test_start=true
+    test_number=${BASH_REMATCH[1]}
+  fi
+done < $file_path
+# for i in $testcase; do
+  # echo $i
+  # output=$(java -cp .nossi nossi.Main < "testcase/${i}/input.txt")
+  # expected=$(cat "testcase/${i}/output.txt")
+  # echo "-- test ${i} --"
+  # echo "출력"
+  # if [ $output == $expected ]; then
+  #   echo -e "${GREEN}${output}${NC}"
+  # else
+  #   echo -e "${RED}${output}${NC}"
+  # fi
+  # echo "정답"
+  # echo $expected
+# done
+
+

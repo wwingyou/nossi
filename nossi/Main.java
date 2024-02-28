@@ -109,7 +109,7 @@ public class Main {
         }
 
         executor.shutdown();
-        ui.printLine("총 " + (correct + wrong) + "문제, 정답 " + UI.GREEN + correct + UI.NC + ", 오답 " + UI.RED + wrong + UI.NC);
+        ui.printLine("총 " + (correct + wrong) + "문제, 정답 " + correct + ", 오답 " + wrong);
         System.exit(0);
     }
 }

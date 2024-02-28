@@ -27,7 +27,9 @@ public class UI {
     }
 
     public void correct(String line) {
-        AnsiConsole.out().println(Ansi.ansi().fg(Ansi.Color.GREEN).a(line).reset());
+        AnsiConsole.systemInstall();
+        System.out.println(Ansi.ansi().fg(Ansi.Color.GREEN).a(line).reset());
+        AnsiConsole.systemUninstall();
     }
 
     public void compose(String saturatedLine) {

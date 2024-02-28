@@ -9,6 +9,7 @@ public class UI {
 
     private static UI instance;
     private UI() {
+        AnsiConsole.systemInstall();
     }
 
     public static UI getInstance() {
@@ -23,16 +24,14 @@ public class UI {
     }
 
     public void wrong(String line) {
-        AnsiConsole.out().println(UI.RED + line + UI.NC);
+        System.out.println(UI.RED + line + UI.NC);
     }
 
     public void correct(String line) {
-        AnsiConsole.systemInstall();
         System.out.println(Ansi.ansi().fg(Ansi.Color.GREEN).a(line).reset());
-        AnsiConsole.systemUninstall();
     }
 
     public void compose(String saturatedLine) {
-        AnsiConsole.out().println(saturatedLine);
+        System.out.println(saturatedLine);
     }
 }

@@ -21,6 +21,6 @@ if errorlevel 1 (
 	goto :EOF
 )
 
-java -cp .nossi\jansi-2.4.0.jar;.nossi nossi.Main < testcase.txt
+java -cp .:../../java:../../lib/jansi-2.4.0.jar nossi.Main < testcase.txt
 
 pause

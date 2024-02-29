@@ -13,6 +13,7 @@ fi
 
 zippath="../publish/${bundlename}.zip"
 cd dest
+rm $(find . -type f -name ".DS_Store")
 zip -q -r $zippath $(ls)
 
 if [ $? -eq 0 ]; then

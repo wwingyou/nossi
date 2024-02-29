@@ -27,6 +27,7 @@ import nossi.deserializer.StringArrayDeserializer;
 import nossi.deserializer.StringDeserializer;
 import nossi.serializer.IntArraySerializer;
 import nossi.serializer.IntSerializer;
+import nossi.serializer.LongSerializer;
 import nossi.serializer.StringSerializer;
 
 public class Main {
@@ -40,6 +41,7 @@ public class Main {
         converter.applyDeserializer(new Int2DArrayDeserializer());
 
         converter.applySerializer(new IntSerializer());
+        converter.applySerializer(new LongSerializer());
         converter.applySerializer(new StringSerializer());
         converter.applySerializer(new IntArraySerializer());
 

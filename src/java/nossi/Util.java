@@ -3,6 +3,7 @@ package nossi;
 public class Util {
     public static Class<?> resolveWrapperClass(Class<?> clazz) {
         if (clazz.equals(Integer.class)) return int.class;
+        if (clazz.equals(Long.class)) return long.class;
         if (clazz.equals(Double.class)) return double.class;
         return clazz;
     }

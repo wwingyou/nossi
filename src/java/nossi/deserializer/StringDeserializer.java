@@ -3,7 +3,7 @@ package nossi.deserializer;
 import java.util.regex.Pattern;
 
 public class StringDeserializer implements Deserializer {
-    static final Pattern MATCH = Pattern.compile("^\"[a-zA-Z]+\"$");
+    static final Pattern MATCH = Pattern.compile("^[\"'].+[\"']$");
 
     @Override
     public String getName() {

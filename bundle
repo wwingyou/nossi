@@ -1,5 +1,7 @@
 #!/bin/bash
 
+RED='\033[31m'
+NC='\033[0m'
 # compile class files
 ./build
 
@@ -10,6 +12,17 @@ chmod 755 script/run_java.bat
 if [ ! -d "dest" ]; then
   echo "[info] 'dest' 디렉토리가 존재하지 않습니다. 새로 생성합니다."
   mkdir "dest"
+else
+  echo -e "${RED}기존 'dest' 디렉토리가 지워집니다. 진행하시겠습니까?(Y,n)${NC}"
+  read answer
+  if [ $answer = 'Y' ] || [ $answer = 'y' ] || [ $answer = 'Yes' ] || [ $answer = 'yes' ]; then
+    echo "[info] 'dest' 디렉토리가 초기화되었습니다."
+    rm -rf "dest"
+    mkdir "dest"
+  else
+    echo "번들링이 취소되었습니다."
+    exit 1
+  fi
 fi
 
 cp -r src/build/java dest

@@ -6,3 +6,4 @@ publish
 src/resource/problems
 
 **/.DS_Store
+.idea
